@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Movix</string>
+    <string name="app_name_uppercase">MOVIX</string>
 </resources>

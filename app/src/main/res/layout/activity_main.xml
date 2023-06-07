@@ -6,15 +6,47 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
     <TextView
+        android:id="@+id/app_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="MOVIX"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_weight="1"
+        android:fontFamily="@font/geologica"
+        android:gravity="left|center_vertical"
+        android:padding="5dp"
+        android:text="@string/app_name_uppercase"
+        android:textSize="34sp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="63dp"
+        android:layout_height="66dp"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        android:padding="5dp"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.089"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/app_header"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
+        app:srcCompat="@drawable/ic_baseline_search_24" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_header">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            app:menu="@menu/menu_bar" />
+
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
