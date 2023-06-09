@@ -91,6 +91,7 @@ public class popularScreen extends Fragment {
 //            "No Country for Old Men"
 //    };
     ArrayList<String> movieNames = new ArrayList<>();
+    ArrayList<String> porterUrl = new ArrayList<>();
     String temp;
 
 
@@ -169,9 +170,11 @@ public class popularScreen extends Fragment {
             for (int i = 0; i < jsonArray.length(); i++) {
                 JSONObject explrObject = jsonArray.getJSONObject(i);
                 movieNames.add(explrObject.getString("title"));
+                porterUrl.add(explrObject.getString("poster_path"));
+
             }
             if(movieNames!=null){
-                CustomAdapter c = new CustomAdapter(movieNames);
+                CustomAdapter c = new CustomAdapter(movieNames,porterUrl);
                 recyclerView.setAdapter(c);
             }
         }catch (JSONException e) {
