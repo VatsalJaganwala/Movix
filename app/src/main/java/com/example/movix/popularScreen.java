@@ -36,60 +36,6 @@ import java.util.Map;
 
 public class popularScreen extends Fragment {
     RecyclerView recyclerView;
-//    String[] movieNames;
-//    String[] movieNames = {
-//            "The Shawshank Redemption",
-//            "The Godfather",
-//            "The Dark Knight",
-//            "Pulp Fiction",
-//            "Fight Club",
-//            "Forrest Gump",
-//            "Goodfellas",
-//            "The Matrix",
-//            "The Lord of the Rings: The Fellowship of the Ring",
-//            "Inception",
-//            "The Silence of the Lambs",
-//            "Star Wars: Episode V - The Empire Strikes Back",
-//            "Saving Private Ryan",
-//            "The Avengers",
-//            "The Departed",
-//            "Gladiator",
-//            "Interstellar",
-//            "The Lion King",
-//            "The Prestige",
-//            "The Green Mile",
-//            "Casablanca",
-//            "The Terminator",
-//            "Back to the Future",
-//            "The Godfather: Part II",
-//            "Se7en",
-//            "The Usual Suspects",
-//            "Schindler's List",
-//            "The Great Gatsby",
-//            "The Dark Knight Rises",
-//            "The Shawshank Redemption",
-//            "Inglourious Basterds",
-//            "The Wolf of Wall Street",
-//            "The Pianist",
-//            "The Princess Bride",
-//            "Avatar",
-//            "The Big Lebowski",
-//            "Gone with the Wind",
-//            "Braveheart",
-//            "Eternal Sunshine of the Spotless Mind",
-//            "The Social Network",
-//            "Memento",
-//            "Jurassic Park",
-//            "The Truman Show",
-//            "The Departed",
-//            "A Clockwork Orange",
-//            "Blade Runner",
-//            "The Exorcist",
-//            "American Beauty",
-//            "The Sixth Sense",
-//            "Casino Royale",
-//            "No Country for Old Men"
-//    };
     ArrayList<String> movieNames = new ArrayList<>();
     ArrayList<String> porterUrl = new ArrayList<>();
     String temp;
@@ -113,7 +59,7 @@ public class popularScreen extends Fragment {
                     new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(gfgPolicy);
         }
-        TextView textView = view.findViewById(R.id.textView3);
+
 
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -155,7 +101,7 @@ public class popularScreen extends Fragment {
         requestQueue.add(stringRequest);
 
 //        Toast.makeText(getContext(), temp, Toast.LENGTH_SHORT).show();
-        textView.setText("Vatsal"+temp );
+
 
 
         Toast.makeText(getContext(),    String.valueOf(movieNames.size()), Toast.LENGTH_SHORT).show();
@@ -174,12 +120,17 @@ public class popularScreen extends Fragment {
 
             }
             if(movieNames!=null){
-                CustomAdapter c = new CustomAdapter(movieNames,porterUrl);
+                CustomAdapter c = new CustomAdapter(movieNames);
                 recyclerView.setAdapter(c);
             }
         }catch (JSONException e) {
             e.printStackTrace();
         }
+        if(movieNames!=null && porterUrl!=null){
+            CustomAdapter c = new CustomAdapter(movieNames, porterUrl);
+            recyclerView.setAdapter(c);
+        }
     }
+
 
 }

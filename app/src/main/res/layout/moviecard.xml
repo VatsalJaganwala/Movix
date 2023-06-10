@@ -2,27 +2,32 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="150dp"
-    android:layout_height="210dp"
-    android:padding="10dp">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:layout_marginBottom="10dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/movieName"
+        android:layout_width="83dp"
+        android:layout_height="124dp"
+        android:text="TextView"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/movieposter"
+        app:layout_constraintEnd_toStartOf="@+id/movieposter"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/movieposter"
+        app:layout_constraintTop_toBottomOf="@+id/movieposter"
+        app:layout_constraintVertical_bias="0.5" />
 
-        <TextView
-            android:id="@+id/movieName"
-            android:layout_width="match_parent"
-            android:layout_height="124dp"
-            android:text="TextView"
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/movieposter"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/img" />
-    </androidx.cardview.widget.CardView>
+    <ImageView
+        android:id="@+id/movieposter"
+        android:layout_width="134dp"
+        android:layout_height="199dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/img" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

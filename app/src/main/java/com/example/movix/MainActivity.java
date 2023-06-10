@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.popular:
                         Toast.makeText(MainActivity.this, "Popular is selected", Toast.LENGTH_SHORT).show();
                         selectedFragment = new popularScreen();
+
                         break;
                 }
 
