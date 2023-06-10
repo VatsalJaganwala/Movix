@@ -1,5 +1,6 @@
 package com.example.movix;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -24,78 +26,46 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 
 public class homeScreen extends Fragment {
-
-
-
-//    public homeScreen() {
-//        // Required empty public constructor
-//    }
-
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
     }
+    ArrayList<String> category =new ArrayList<>();
+    ArrayList<String> url = new ArrayList<>();
+    RecyclerView homeRecyclerView;
 
+
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home_screen, container, false);
-        if (android.os.Build.VERSION.SDK_INT > 9) {
+       if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy gfgPolicy =
                     new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(gfgPolicy);
+             StrictMode.setThreadPolicy(gfgPolicy);
         }
-        RecyclerView inCinemasRecyclerView = view.findViewById(R.id.inCinemarRecyclerView);
-        inCinemasRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-        String url = "https://api.themoviedb.org/3/movie/now_playing?page=1&region=in";
+        Random random = new Random();
+        category.add("Now Playing"); url.add("https://api.themoviedb.org/3/movie/now_playing?region=in");
+        category.add("Top TV Shows"); url.add("https://api.themoviedb.org/3/tv/top_rated?language=en-US%7Chi&page=1");
+        category.add("Top Action Movies"); url.add("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en&region=in&sort_by=popularity.desc&watch_region=in&with_genres=28");
+        category.add("Top Dramas"); url.add("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en&page=1&region=in&sort_by=popularity.desc&watch_region=in&with_genres=18");
+        category.add("Mystery Thriller"); url.add("https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=hi%7Cen&page=1&region=in&sort_by=popularity.desc&watch_region=in&with_genres=9648%7C53");
+        homeRecyclerView = view.findViewById(R.id.homeRecycletView);
+        homeRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        homeAdapter homeAdapter = new homeAdapter(category,url,getContext());
+        homeRecyclerView.setAdapter(homeAdapter);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Handle the response here
-                        Log.d("Response", response);
-
-                        JSONArray jsonArray = getJSONArray(response);
-                        CustomAdapter c = null;
-                        try {
-                            c = new CustomAdapter(jsonArray);
-                            inCinemasRecyclerView.setAdapter(c);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle the error here
-                        Log.e("Error", error.toString());
-                    }
-                }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put("accept", "application/json");
-                headers.put("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZGM4OTUzZTU5NGI5ODUyZDAzYTQxMjI1ZWNmYTU2MCIsInN1YiI6IjY0ODA3N2VhOTkyNTljMDBhY2NhOWVmYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4Y2qHnJxT3zXsV7eMvQl3jYlIGaY8FZEGuzB2NHsZMM");
-                return headers;
-            }
-        };
-        // Add the request to the RequestQueue
-        RequestQueue requestQueue = Volley.newRequestQueue(getContext());
-        requestQueue.add(stringRequest);
 
         return view;
     }

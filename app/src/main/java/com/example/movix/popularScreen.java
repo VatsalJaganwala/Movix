@@ -105,7 +105,6 @@ public class popularScreen extends Fragment {
 
 
 
-        Toast.makeText(getContext(),    String.valueOf(movieNames.size()), Toast.LENGTH_SHORT).show();
 
         return view;
 
