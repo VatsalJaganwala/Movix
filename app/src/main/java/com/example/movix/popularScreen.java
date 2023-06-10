@@ -38,6 +38,7 @@ public class popularScreen extends Fragment {
     RecyclerView recyclerView;
     ArrayList<String> movieNames = new ArrayList<>();
     ArrayList<String> porterUrl = new ArrayList<>();
+    ArrayList<Integer> movieId = new ArrayList<>();
     String temp;
 
 
@@ -113,23 +114,14 @@ public class popularScreen extends Fragment {
         try {
             JSONObject jsnobject = new JSONObject(response);
             JSONArray jsonArray = jsnobject.getJSONArray("results");
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject explrObject = jsonArray.getJSONObject(i);
-                movieNames.add(explrObject.getString("title"));
-                porterUrl.add(explrObject.getString("poster_path"));
+            CustomAdapter c = new CustomAdapter(jsonArray);
+            recyclerView.setAdapter(c);
 
-            }
-            if(movieNames!=null){
-                CustomAdapter c = new CustomAdapter(movieNames);
-                recyclerView.setAdapter(c);
-            }
+
         }catch (JSONException e) {
             e.printStackTrace();
         }
-        if(movieNames!=null && porterUrl!=null){
-            CustomAdapter c = new CustomAdapter(movieNames, porterUrl);
-            recyclerView.setAdapter(c);
-        }
+
     }
 
 
