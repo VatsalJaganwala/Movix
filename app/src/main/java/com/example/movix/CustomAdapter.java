@@ -1,5 +1,6 @@
 package com.example.movix;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,7 +32,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     private ArrayList<String> movieNames = new ArrayList<>();
     private ArrayList<String> posterUrl = new ArrayList<>();
     private ArrayList<Integer> movieId = new ArrayList<>();
-
+    private JSONArray movieDetails;
 
     /**
      * Provide a reference to the type of views that you are using
@@ -60,6 +62,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
 
     public CustomAdapter(JSONArray jsonArray) throws JSONException {
+        movieDetails = jsonArray;
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject explrObject = jsonArray.getJSONObject(i);
             if(explrObject.has("title")) {
@@ -92,8 +95,19 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         viewHolder.getTextView().setText(movieNames.get(position));
         String url ="https://image.tmdb.org/t/p/w185"+ posterUrl.get(position) ;
         Picasso.get().load(url).into(viewHolder.getMovieposterView());
+        viewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(v.getContext(), movieNames.get(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(),MovieDetails.class);
+                v.getContext().startActivity(intent);
+            }
+        });
+//        start
 
     }
+
+
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
