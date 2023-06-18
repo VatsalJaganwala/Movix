@@ -9,16 +9,14 @@
 
     <TextView
         android:id="@+id/movieName"
-        android:layout_width="83dp"
-        android:layout_height="124dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:text="TextView"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/movieposter"
-        app:layout_constraintEnd_toStartOf="@+id/movieposter"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/movieposter"
-        app:layout_constraintTop_toBottomOf="@+id/movieposter"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/movieposter"
+        app:layout_constraintStart_toStartOf="@+id/movieposter"
+        app:layout_constraintTop_toTopOf="@+id/movieposter" />
 
     <ImageView
         android:id="@+id/movieposter"
