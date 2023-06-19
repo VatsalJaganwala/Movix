@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -180,20 +184,44 @@ public class MovieDetails extends AppCompatActivity {
             voteCountValue=explrObject.getInt("vote_count");
         TextView name = findViewById(R.id.name);
         name.setText(nameValue);
+        TextView overview = findViewById(R.id.overview);
+        overview.setText(overviewValue);
 
-    }
+        TextView showMoreLess = findViewById(R.id.showMoreLess);
+        int lineCount = overview.getLineCount();
+        int lineHeight = overview.getLineHeight();
+        int textViewHeight = overview.getHeight();
+        int maxLines = 4;
 
-    private JSONArray getJSONArray(String response){
-        JSONArray jsonArray = null;
-        try {
-            JSONObject jsnobject = new JSONObject(response);
-            jsonArray = jsnobject.getJSONArray("results");
-            return jsonArray;
-
-        }catch (JSONException e) {
-            e.printStackTrace();
+        boolean isDataLessThanFourLines = (lineCount <= maxLines) && (lineHeight * lineCount <= textViewHeight);
+        if (isDataLessThanFourLines){
+            showMoreLess.setVisibility(View.GONE);
         }
-        return jsonArray;
+        showMoreLess.setOnClickListener(new View.OnClickListener() {
+        Boolean isExpanded = false;
+            @Override
+            public void onClick(View v) {
+                if (isExpanded) {
+                    overview.setMaxLines(4);
+                    overview.setEllipsize(TextUtils.TruncateAt.END);
+                    showMoreLess.setText("Show More");
+
+                } else {
+                    overview.setMaxLines(Integer.MAX_VALUE);
+                    overview.setEllipsize(null);
+                    showMoreLess.setText("Show Less");
+
+                }
+                isExpanded = !isExpanded;
+            }
+        });
+
+    ImageView poster = findViewById(R.id.poster);
+    posterUrlValue = "https://image.tmdb.org/t/p/original"+ posterUrlValue;
+    Picasso.get().load(posterUrlValue).into(poster);
+    ImageView backdrop = findViewById(R.id.backdrop);
+        backdropPathValue = "https://image.tmdb.org/t/p/original"+ backdropPathValue;
+        Picasso.get().load(backdropPathValue).into(backdrop);
 
     }
 }
