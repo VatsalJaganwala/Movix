@@ -1,9 +1,6 @@
 package com.example.movix;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +16,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -31,16 +24,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 //    private String[] movieNames;
     private ArrayList<String> name = new ArrayList<>();
     private ArrayList<String> posterUrl = new ArrayList<>();
-    private ArrayList<String> backdropPathList = new ArrayList<>();
-    private ArrayList<ArrayList<Integer>> genreIdsList = new ArrayList<>();
     private ArrayList<Integer> idList = new ArrayList<>();
-    private ArrayList<String> originalLanguageList = new ArrayList<>();
-    private ArrayList<String> overviewList = new ArrayList<>();
-    private ArrayList<String> releaseDateList = new ArrayList<>();
-    private ArrayList<Double> voteAverageList = new ArrayList<>();
-    private ArrayList<Integer> voteCountList = new ArrayList<>();
-    private JSONArray movieDetails;
-
     private ArrayList<Boolean> isMovie = new ArrayList<>();
 
 
@@ -73,7 +57,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
 
     public CustomAdapter(JSONArray jsonArray) throws JSONException {
-        movieDetails = jsonArray;
         for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject explrObject = jsonArray.getJSONObject(i);
             if(explrObject.has("title")) {
@@ -88,24 +71,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             }
             this.posterUrl.add(explrObject.getString("poster_path"));
             this.idList.add(explrObject.getInt("id"));
-//            this.backdropPathList.add(explrObject.getString("backdrop_path"));
-//            try{
-//                JSONArray genreIdsArray = explrObject.getJSONArray("genre_ids");
-//                ArrayList<Integer> genre = new ArrayList<>();
-//                for (int j = 0; j < genreIdsArray.length(); j++) {
-//                    genre.add(genreIdsArray.getInt(i));
-//                }
-//                genreIdsList.add(genre);
-//            }
-//            catch (JSONException e){
-//                e.printStackTrace();
-//                Log.e("Genre Failed", "CustomAdapter: "+ name.get(name.size()-1) );
-//
-//            }
-//            originalLanguageList.add(explrObject.getString("original_language"));
-//            overviewList.add(explrObject.getString("overview"));
-//            voteAverageList.add(explrObject.getDouble("vote_average"));
-//            voteCountList.add(explrObject.getInt("vote_count"));
 
 
         }
@@ -136,12 +101,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 Intent intent = new Intent(v.getContext(),MovieDetails.class);
                 intent.putExtra("id", idList.get(position));
                 intent.putExtra("ISMOVIE", isMovie.get(position));
-
-
                 v.getContext().startActivity(intent);
             }
         });
-//        start
+
 
     }
 

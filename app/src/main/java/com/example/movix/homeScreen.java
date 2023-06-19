@@ -67,6 +67,7 @@ public class homeScreen extends Fragment {
         homeRecyclerView.setAdapter(homeAdapter);
 
 
+
         return view;
     }
     private JSONArray getJSONArray(String response){

@@ -1,11 +1,14 @@
 package com.example.movix;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MovieDetails extends AppCompatActivity {
@@ -33,6 +37,7 @@ public class MovieDetails extends AppCompatActivity {
         int idValue;
     double voteAverageValue;
     int voteCountValue ;
+    Boolean isMovie;
     JSONObject moviejson;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,14 +51,14 @@ public class MovieDetails extends AppCompatActivity {
 
 
         idValue = getIntent().getIntExtra("id", 0);
-        Boolean isMovie = getIntent().getBooleanExtra("ISMOVIE",true);
+        isMovie = getIntent().getBooleanExtra("ISMOVIE",true);
         ArrayList<Integer> genreIdsValue;
 
         if (isMovie){
-            url1 = "https://api.themoviedb.org/3/movie/" + idValue + "/external_ids";
+            url1 = "https://api.themoviedb.org/3/movie/" + idValue ;
         }
         else {
-            url1 = "https://api.themoviedb.org/3/tv/" + idValue + "/external_ids";
+            url1 = "https://api.themoviedb.org/3/tv/" + idValue ;
         }
         Toast.makeText(this, url1, Toast.LENGTH_SHORT).show();
 
@@ -67,8 +72,10 @@ public class MovieDetails extends AppCompatActivity {
 
                         try {
                             JSONObject jsonObject = new JSONObject(jsonString);
-                            String imdbId = jsonObject.getString("imdb_id");
-                            getDetails(imdbId);
+//                            String imdbId = jsonObject.getString("imdb_id");
+                            setData(jsonObject);
+                            getProvider();
+
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -96,40 +103,95 @@ public class MovieDetails extends AppCompatActivity {
 
 
     }
-    private void getDetails(String imdbId){
-        String url = "https://api.themoviedb.org/3/find/"+imdbId+"?external_source=imdb_id";
+    private void getProvider(){
+        String url;
+        if(isMovie){
+            url = "https://api.themoviedb.org/3/movie/" + idValue + "/watch/providers";
+        }
+        else {
+            url = "https://api.themoviedb.org/3/tv/" + idValue + "/watch/providers";
+        }
         StringRequest stringRequest = new StringRequest(Request.Method.GET,url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Handle the response here
-                        JSONObject explrObject = new JSONObject();
                         Log.d("Response", response);
-                        String jsonString = response;
-
-                        // Parse the JSON string
-                        JSONObject jsonObject = null;
+                            ArrayList<String> buyProviders = new ArrayList<>();
+                            ArrayList<String> adsProviders = new ArrayList<>();
+                            ArrayList<String> flatrateProviders = new ArrayList<>();
+                            ArrayList<String> rentProviders = new ArrayList<>();
+                        ArrayList<String> buyProvidersLogo = new ArrayList<>();
+                        ArrayList<String> adsProvidersLogo = new ArrayList<>();
+                        ArrayList<String> flatrateProvidersLogo = new ArrayList<>();
+                        ArrayList<String> rentProvidersLogo = new ArrayList<>();
                         try {
-                            jsonObject = new JSONObject(jsonString);
+                            JSONObject jsonObject = new JSONObject(response);
+                            JSONObject results = jsonObject.getJSONObject("results");
+                            JSONObject indiaData = results.getJSONObject("IN");
+                            if(indiaData.has("ads")) {
+                                JSONArray adsArray = indiaData.getJSONArray("ads");
+                                for (int i = 0; i < adsArray.length(); i++) {
+                                    JSONObject provider = adsArray.getJSONObject(i);
+                                    String providerName = provider.getString("provider_name");
+                                    adsProvidersLogo.add(provider.getString("logo_path"));
+                                    adsProviders.add(providerName);
+                                }
+                            }
+                            if(indiaData.has("flatrate")) {
+                                JSONArray flatrateArray = indiaData.getJSONArray("flatrate");
+                                for (int i = 0; i < flatrateArray.length(); i++) {
+                                    JSONObject provider = flatrateArray.getJSONObject(i);
+                                    String providerName = provider.getString("provider_name");
+                                    flatrateProvidersLogo.add(provider.getString("logo_path"));
+                                    flatrateProviders.add(providerName);
+                                }
+                            }
+                            if(indiaData.has("rent")) {
+                                JSONArray rentArray = indiaData.getJSONArray("rent");
+                                for (int i = 0; i < rentArray.length(); i++) {
+                                    JSONObject provider = rentArray.getJSONObject(i);
+                                    String providerName = provider.getString("provider_name");
+                                    rentProviders.add(providerName);
+                                    rentProvidersLogo.add(provider.getString("logo_path"));
+                                }
+                            }
+                            if(indiaData.has("buy")) {
+                                JSONArray buyArray = indiaData.getJSONArray("buy");
+                                for (int i = 0; i < buyArray.length(); i++) {
+                                    JSONObject provider = buyArray.getJSONObject(i);
+                                    String providerName = provider.getString("provider_name");
+                                    buyProviders.add(providerName);
+                                    buyProvidersLogo.add(provider.getString("logo_path"));
+                                }
+                            }
 
-                        // Extract data from movie_results or tv_results
-                        JSONArray movieResults = jsonObject.getJSONArray("movie_results");
-                        JSONArray tvResults = jsonObject.getJSONArray("tv_results");
 
-                        if (movieResults.length() > 0) {
+                            ProviderAdapter ads = new ProviderAdapter(adsProviders,adsProvidersLogo);
+                            RecyclerView adsRecycler = findViewById(R.id.adsRecycler);
+                            adsRecycler.setLayoutManager(new LinearLayoutManager(MovieDetails.this ,LinearLayoutManager.HORIZONTAL,false));
+                            adsRecycler.setAdapter(ads);
+                            ProviderAdapter stream = new ProviderAdapter(flatrateProviders,flatrateProvidersLogo);
+                            RecyclerView flatRecycler = findViewById(R.id.flatRecycler);
+                            flatRecycler.setLayoutManager(new LinearLayoutManager(MovieDetails.this ,LinearLayoutManager.HORIZONTAL,false));
+                            flatRecycler.setAdapter(stream);
+                            ProviderAdapter rent = new ProviderAdapter(rentProviders,rentProvidersLogo);
+                            RecyclerView rentRecycler = findViewById(R.id.rentRecycler);
+                            rentRecycler.setLayoutManager(new LinearLayoutManager(MovieDetails.this ,LinearLayoutManager.HORIZONTAL,false));
+                            rentRecycler.setAdapter(rent);
+                            ProviderAdapter buy = new ProviderAdapter(buyProviders,buyProvidersLogo);
+                            RecyclerView buyRecycler = findViewById(R.id.buyRecycler);
+                            buyRecycler.setLayoutManager(new LinearLayoutManager(MovieDetails.this ,LinearLayoutManager.HORIZONTAL,false));
+                            buyRecycler.setAdapter(buy);
 
-                            explrObject = movieResults.getJSONObject(0);
 
-                        } else if (tvResults.length() > 0) {
-                            explrObject = tvResults.getJSONObject(0);
-                        }
-                        setData(explrObject);
 
 
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
 
 
                     }
