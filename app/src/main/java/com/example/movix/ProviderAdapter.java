@@ -66,6 +66,7 @@ public class ProviderAdapter extends RecyclerView.Adapter<ProviderAdapter.ViewHo
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         viewHolder.getTextView().setText(providerName.get(position));
+        viewHolder.getTextView().setSelected(true);
 
         Picasso.get().load("https://image.tmdb.org/t/p/original"+logoUrl.get(position)).into(viewHolder.getLogo());
 

@@ -26,6 +26,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -125,11 +126,20 @@ public class MovieDetails extends AppCompatActivity {
                         ArrayList<String> adsProvidersLogo = new ArrayList<>();
                         ArrayList<String> flatrateProvidersLogo = new ArrayList<>();
                         ArrayList<String> rentProvidersLogo = new ArrayList<>();
+                        TextView providerNotAvailable = findViewById(R.id.providerNotAvailable);
+                            TextView adsTextview = findViewById(R.id.adsTextView);
+                            TextView rentTextView =findViewById(R.id.rentTextView);
+                            TextView streamTextView =findViewById(R.id.streamTextView);
+                            TextView buyTextView =findViewById(R.id.buyTextView);
+                            Boolean providerAvailable = false;
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             JSONObject results = jsonObject.getJSONObject("results");
                             JSONObject indiaData = results.getJSONObject("IN");
                             if(indiaData.has("ads")) {
+                                providerAvailable = true;
+                                adsTextview.setText("Ads");
+                                providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray adsArray = indiaData.getJSONArray("ads");
                                 for (int i = 0; i < adsArray.length(); i++) {
                                     JSONObject provider = adsArray.getJSONObject(i);
@@ -139,6 +149,9 @@ public class MovieDetails extends AppCompatActivity {
                                 }
                             }
                             if(indiaData.has("flatrate")) {
+                                providerAvailable = true;
+                                streamTextView.setText("Sub");
+                                providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray flatrateArray = indiaData.getJSONArray("flatrate");
                                 for (int i = 0; i < flatrateArray.length(); i++) {
                                     JSONObject provider = flatrateArray.getJSONObject(i);
@@ -148,6 +161,9 @@ public class MovieDetails extends AppCompatActivity {
                                 }
                             }
                             if(indiaData.has("rent")) {
+                                providerAvailable = true;
+                                rentTextView.setText("Rent");
+                                providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray rentArray = indiaData.getJSONArray("rent");
                                 for (int i = 0; i < rentArray.length(); i++) {
                                     JSONObject provider = rentArray.getJSONObject(i);
@@ -157,6 +173,9 @@ public class MovieDetails extends AppCompatActivity {
                                 }
                             }
                             if(indiaData.has("buy")) {
+                                providerAvailable = true;
+                                buyTextView.setText("Buy");
+                                providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray buyArray = indiaData.getJSONArray("buy");
                                 for (int i = 0; i < buyArray.length(); i++) {
                                     JSONObject provider = buyArray.getJSONObject(i);
@@ -165,6 +184,18 @@ public class MovieDetails extends AppCompatActivity {
                                     buyProvidersLogo.add(provider.getString("logo_path"));
                                 }
                             }
+//                            if(!providerAvailable){
+//                                String message="Not available";
+//                                if(isMovie){
+//                                    message = "Currently this movie is not streaming on any platform";
+//                                }
+//                                else{
+//                                    message = "Currently this TV/Web series is not streaming on any platform";
+//                                }
+//                                providerNotAvailable.setText(message);
+//                            }
+////
+
 
 
                             ProviderAdapter ads = new ProviderAdapter(adsProviders,adsProvidersLogo);
