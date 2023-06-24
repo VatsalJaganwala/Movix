@@ -1,18 +1,20 @@
 package com.example.movix;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -30,14 +32,19 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class MovieDetails extends AppCompatActivity {
-        String nameValue ,posterUrlValue ,backdropPathValue  ,originalLanguageValue,overviewValue,releaseDateValue,url1;
+        String nameValue ,posterUrlValue ,backdropPathValue  ,originalLanguageValue,overviewValue,releaseDateValue,url1,runtimeValue;
         int idValue;
     double voteAverageValue;
     int voteCountValue ;
+    ArrayList<String> genre = new ArrayList<>();
+    ArrayList<String> CastName = new ArrayList<>();
+    ArrayList<String> CastCharacter = new ArrayList<>();
+    ArrayList<String> Director = new ArrayList<>();
+    ArrayList<String> Creater = new ArrayList<>();
     Boolean isMovie;
     JSONObject moviejson;
     @Override
@@ -61,7 +68,7 @@ public class MovieDetails extends AppCompatActivity {
         else {
             url1 = "https://api.themoviedb.org/3/tv/" + idValue ;
         }
-        Toast.makeText(this, url1, Toast.LENGTH_SHORT).show();
+
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET,url1,
                 new Response.Listener<String>() {
@@ -76,6 +83,10 @@ public class MovieDetails extends AppCompatActivity {
 //                            String imdbId = jsonObject.getString("imdb_id");
                             setData(jsonObject);
                             getProvider();
+//                            getClips();
+                            setOtherDetails();
+                            getCredits();
+                            getSimilar();
 
 
                         } catch (JSONException e) {
@@ -104,6 +115,190 @@ public class MovieDetails extends AppCompatActivity {
 
 
     }
+    private void setOtherDetails(){
+        TextView rating = findViewById(R.id.rating);
+//        Toast.makeText(this, String.valueOf(voteAverageValue), Toast.LENGTH_SHORT).show();
+        rating.setText(String.valueOf(voteAverageValue));
+        if(runtimeValue!=null){
+
+            TextView runtime = findViewById(R.id.runtime);
+            runtime.setText(getTimeFormat(Integer.parseInt(runtimeValue)));
+        }
+        else {
+            TableRow runtimeData = findViewById(R.id.runtimeData);
+            runtimeData.setVisibility(View.GONE);
+        }
+        TextView releaseDate = findViewById(R.id.releasedate);
+        releaseDate.setText(String.valueOf(releaseDateValue));
+        RecyclerView genreRecyclerView = findViewById(R.id.genreRecyclerView);
+        GenreAdapter ad = new GenreAdapter(genre);
+        genreRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetails.this,LinearLayoutManager.HORIZONTAL,false));
+        genreRecyclerView.setAdapter(ad);
+
+
+
+    }
+    private void getSimilar(){
+        ArrayList<String> RecommandationText= new ArrayList<>();
+        ArrayList<String> link = new ArrayList<>();
+        String text = "People who like "+nameValue+" also like these";
+        RecommandationText.add(text);
+        String url;
+        if(isMovie){
+            url ="https://api.themoviedb.org/3/movie/"+idValue+"/recommendations?language=en-US&page=1";
+        }
+        else {
+            url ="https://api.themoviedb.org/3/tv/"+idValue+"/recommendations?language=en-US&page=1";
+        }
+        link.add(url);
+        homeAdapter recommand = new homeAdapter(RecommandationText,link,MovieDetails.this);
+        RecyclerView recommandationRecyclerView = findViewById(R.id.recommandationRecyclerView);
+        recommandationRecyclerView.setLayoutManager(new LinearLayoutManager(MovieDetails.this));
+        recommandationRecyclerView.setAdapter(recommand);
+    }
+    private void getCredits(){
+        TextView directorField = findViewById(R.id.DirectorField);
+        String url ;
+        if(isMovie){
+            url = "https://api.themoviedb.org/3/movie/" + idValue + "/credits?language=en-US";
+        }
+        else {
+            url = "https://api.themoviedb.org/3/tv/" + idValue + "/credits?language=en-US";
+        }
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Handle the response here
+                        Log.d("Response", response);
+                        String jsonString =response;
+
+                        try {
+                            JSONObject jsonObject = new JSONObject(jsonString);
+                            JSONArray castJsonArray = jsonObject.getJSONArray("cast");
+                            for (int i=0;i<castJsonArray.length();i++){
+                                JSONObject castJsonObject = castJsonArray.getJSONObject(i);
+                                if(castJsonObject.getString("known_for_department").equals("Acting"))
+                                {
+                                    CastName.add(castJsonObject.getString("name"));
+                                    CastCharacter.add(castJsonObject.getString("character"));
+//                                    Toast.makeText(MovieDetails.this,castJsonObject.getString("name") , Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            JSONArray crewJsonArray = jsonObject.getJSONArray("crew");
+                            for (int i=0;i<crewJsonArray.length();i++){
+                                JSONObject crewJsonObject = crewJsonArray.getJSONObject(i);
+                                if(crewJsonObject.getString("job").equals("Director"))
+                                {
+                                    Director.add(crewJsonObject.getString("name"));
+                                }
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(!Director.isEmpty())
+                        {
+                            directorField.setText("DIRECTOR");
+                        }
+                        else if(!Creater.isEmpty()){
+                            directorField.setText("CREATED BY");
+                            Director.addAll(Creater);
+                        }
+
+                        RecyclerView directorView = findViewById(R.id.directorRecyclerView);
+                        GenreAdapter director = new GenreAdapter(Director);
+                        directorView.setLayoutManager(new LinearLayoutManager(MovieDetails.this,LinearLayoutManager.HORIZONTAL,false));
+                        directorView.setAdapter(director);
+
+                        RecyclerView castRecycler = findViewById(R.id.castRecyclerView);
+                        CastAdapter cast = new CastAdapter(CastName,CastCharacter);
+                        castRecycler.setLayoutManager(new LinearLayoutManager(MovieDetails.this,LinearLayoutManager.HORIZONTAL,false));
+                        castRecycler.setAdapter(cast);
+
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle the error here
+                        Log.e("Error", error.toString());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("accept", "application/json");
+                headers.put("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZGM4OTUzZTU5NGI5ODUyZDAzYTQxMjI1ZWNmYTU2MCIsInN1YiI6IjY0ODA3N2VhOTkyNTljMDBhY2NhOWVmYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4Y2qHnJxT3zXsV7eMvQl3jYlIGaY8FZEGuzB2NHsZMM");
+                return headers;
+            }
+        };
+        // Add the request to the RequestQueue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
+    private void getClips(){
+        String url;
+        if(isMovie) {
+            url="https://api.themoviedb.org/3/movie/"+idValue+"/videos";
+        }
+        else {
+            url="https://api.themoviedb.org/3/tv/"+idValue+"/videos";
+        }
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET,url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Handle the response here
+                        ArrayList<String> ClipKeys = new ArrayList<>();
+                        Log.d("Response", response);
+                        String jsonString =response;
+
+                        try {
+                            JSONObject json = new JSONObject(jsonString);
+                            JSONArray resultsArray = json.getJSONArray("results");
+                            for (int i = 0; i < resultsArray.length(); i++) {
+                                JSONObject result = resultsArray.getJSONObject(i);
+                                String key = result.getString("key");
+                                ClipKeys.add(key);
+//                                Toast.makeText(MovieDetails.this, ClipKeys.get(ClipKeys.size()-1), Toast.LENGTH_SHORT).show();
+                            }
+                                Toast.makeText(MovieDetails.this, String.valueOf(resultsArray.length()), Toast.LENGTH_SHORT).show();
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        RecyclerView clipsRecycler = findViewById(R.id.videoClipsRecycler);
+                        clipsRecycler.setLayoutManager(new LinearLayoutManager(MovieDetails.this));
+                        clipsAdapter clipAdapter = new clipsAdapter(ClipKeys);
+                        clipsRecycler.setAdapter(clipAdapter);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // Handle the error here
+                        Log.e("Error", error.toString());
+                    }
+                }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("accept", "application/json");
+                headers.put("Authorization", "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2ZGM4OTUzZTU5NGI5ODUyZDAzYTQxMjI1ZWNmYTU2MCIsInN1YiI6IjY0ODA3N2VhOTkyNTljMDBhY2NhOWVmYSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.4Y2qHnJxT3zXsV7eMvQl3jYlIGaY8FZEGuzB2NHsZMM");
+                return headers;
+            }
+        };
+        // Add the request to the RequestQueue
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
+    }
     private void getProvider(){
         String url;
         if(isMovie){
@@ -127,6 +322,7 @@ public class MovieDetails extends AppCompatActivity {
                         ArrayList<String> flatrateProvidersLogo = new ArrayList<>();
                         ArrayList<String> rentProvidersLogo = new ArrayList<>();
                         TextView providerNotAvailable = findViewById(R.id.providerNotAvailable);
+                            providerNotAvailable.setText("Currently this movie/series is not streaming on any platform");
                             TextView adsTextview = findViewById(R.id.adsTextView);
                             TextView rentTextView =findViewById(R.id.rentTextView);
                             TextView streamTextView =findViewById(R.id.streamTextView);
@@ -138,7 +334,7 @@ public class MovieDetails extends AppCompatActivity {
                             JSONObject indiaData = results.getJSONObject("IN");
                             if(indiaData.has("ads")) {
                                 providerAvailable = true;
-                                adsTextview.setText("Ads");
+                                adsTextview.setText("ADS");
                                 providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray adsArray = indiaData.getJSONArray("ads");
                                 for (int i = 0; i < adsArray.length(); i++) {
@@ -150,7 +346,7 @@ public class MovieDetails extends AppCompatActivity {
                             }
                             if(indiaData.has("flatrate")) {
                                 providerAvailable = true;
-                                streamTextView.setText("Sub");
+                                streamTextView.setText("STREAM");
                                 providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray flatrateArray = indiaData.getJSONArray("flatrate");
                                 for (int i = 0; i < flatrateArray.length(); i++) {
@@ -162,7 +358,7 @@ public class MovieDetails extends AppCompatActivity {
                             }
                             if(indiaData.has("rent")) {
                                 providerAvailable = true;
-                                rentTextView.setText("Rent");
+                                rentTextView.setText("RENT");
                                 providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray rentArray = indiaData.getJSONArray("rent");
                                 for (int i = 0; i < rentArray.length(); i++) {
@@ -174,7 +370,7 @@ public class MovieDetails extends AppCompatActivity {
                             }
                             if(indiaData.has("buy")) {
                                 providerAvailable = true;
-                                buyTextView.setText("Buy");
+                                buyTextView.setText("BUY");
                                 providerNotAvailable.setVisibility(View.GONE);
                                 JSONArray buyArray = indiaData.getJSONArray("buy");
                                 for (int i = 0; i < buyArray.length(); i++) {
@@ -250,27 +446,47 @@ public class MovieDetails extends AppCompatActivity {
 
         if(explrObject.has("title")) {
             nameValue=explrObject.getString("title");
+            releaseDateValue = explrObject.getString("release_date");
 
         }
         else {
             nameValue=explrObject.getString("name");
+            releaseDateValue = explrObject.getString("first_air_date");
+            try{
+                JSONArray createrArray = explrObject.getJSONArray("created_by");
+                for (int j = 0; j < createrArray.length(); j++) {
+                    JSONObject createrObject = createrArray.getJSONObject(j);
+                    Creater.add(createrObject.getString("name"));
+//                    Toast.makeText(this, genre.get(genre.size()-1), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+                Log.e("Genre Failed", "CustomAdapter: "+ nameValue );
+
+            }
+        }
+        if(explrObject.has("runtime")) {
+            runtimeValue = explrObject.getString("runtime");
         }
         posterUrlValue=explrObject.getString("poster_path");
         idValue=explrObject.getInt("id");
             backdropPathValue=explrObject.getString("backdrop_path");
-//            try{
-//                JSONArray genreIdsArray = explrObject.getJSONArray("genre_ids");
-//                ArrayList<Integer> genre = new ArrayList<>();
-//                for (int j = 0; j < genreIdsArray.length(); j++) {
-//                    genre.add(genreIdsArray.getInt(i));
-//                }
-//                genreIdsList.add(genre);
-//            }
-//            catch (JSONException e){
-//                e.printStackTrace();
-//                Log.e("Genre Failed", "CustomAdapter: "+ name.get(name.size()-1) );
-//
-//            }
+            try{
+                JSONArray genreArray = explrObject.getJSONArray("genres");
+                for (int j = 0; j < genreArray.length(); j++) {
+                    JSONObject genreObject = genreArray.getJSONObject(j);
+                    genre.add(genreObject.getString("name"));
+//                    Toast.makeText(this, genre.get(genre.size()-1), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+                Log.e("Genre Failed", "CustomAdapter: "+ nameValue );
+
+            }
             originalLanguageValue=explrObject.getString("original_language");
             overviewValue=explrObject.getString("overview");
             voteAverageValue= explrObject.getDouble("vote_average");
@@ -317,4 +533,10 @@ public class MovieDetails extends AppCompatActivity {
         Picasso.get().load(backdropPathValue).into(backdrop);
 
     }
+    public static String getTimeFormat(int minutes) {
+        int hours = minutes / 60;
+        int remainingMinutes = minutes % 60;
+        return String.format(Locale.getDefault(), "%02d hrs %02d min", hours, remainingMinutes);
+    }
+
 }

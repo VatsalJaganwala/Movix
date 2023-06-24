@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/StreamTextView"
+    android:id="@+id/RatingField"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MovieDetails">
@@ -17,6 +17,7 @@
             android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/TitleLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -35,13 +36,34 @@
                     app:layout_constraintTop_toBottomOf="@+id/backdrop" />
 
                 <ImageView
+                    android:id="@+id/temp_backdrop"
+                    android:layout_width="match_parent"
+                    android:layout_height="233dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/temp_backdrop" />
+
+                <ImageView
                     android:id="@+id/backdrop"
                     android:layout_width="match_parent"
                     android:layout_height="233dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/backdrop" />
+                    app:srcCompat="@drawable/temp_backdrop" />
+
+                <ImageView
+                    android:id="@+id/temp_poster"
+                    android:layout_width="85dp"
+                    android:layout_height="121dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="172dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/backdrop"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/temp_poster" />
 
                 <ImageView
                     android:id="@+id/poster"
@@ -53,10 +75,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/backdrop"
                     app:layout_constraintVertical_bias="0.0"
-                    app:srcCompat="@drawable/img" />
+                    app:srcCompat="@drawable/temp_poster" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/DescriptionLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -86,11 +110,13 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <LinearLayout
+                android:id="@+id/ProviderLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="@drawable/button_background"
-                android:orientation="vertical">
+                android:background="@drawable/border_background"
+                android:orientation="vertical"
+                android:padding="5dp">
 
                 <TextView
                     android:id="@+id/watchHereTextView"
@@ -105,7 +131,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Currently this movie/series is not streaming on any platform"
                     android:textSize="16sp" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -115,11 +140,13 @@
 
                     <TextView
                         android:id="@+id/adsTextView"
-                        android:layout_width="50dp"
+                        android:layout_width="55dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:rotation="-90"
                         android:text=""
+                        android:textSize="11sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@+id/adsRecycler"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -141,12 +168,14 @@
 
                     <TextView
                         android:id="@+id/streamTextView"
-                        android:layout_width="50dp"
+                        android:layout_width="55dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:rotation="-90"
                         android:singleLine="false"
                         android:text=""
+                        android:textSize="11sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -167,11 +196,13 @@
 
                     <TextView
                         android:id="@+id/rentTextView"
-                        android:layout_width="50dp"
+                        android:layout_width="55dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:rotation="-90"
                         android:text=""
+                        android:textSize="11sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
@@ -192,11 +223,13 @@
 
                     <TextView
                         android:id="@+id/buyTextView"
-                        android:layout_width="50dp"
+                        android:layout_width="55dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:rotation="-90"
                         android:text=""
+                        android:textSize="11sp"
+                        android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="0.5" />
@@ -210,6 +243,178 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </LinearLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/ClipsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/trailersTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Trailers and Clips"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/videoClipsRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/trailersTitle" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TableLayout
+                        android:id="@+id/tableLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10dp"
+                        tools:layout_editor_absoluteX="10dp"
+                        tools:layout_editor_absoluteY="10dp">
+
+                        <TableRow
+                            android:id="@+id/ratingData"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/ratingField"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="RATING" />
+
+                            <TextView
+                                android:id="@+id/rating"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="TextView" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/runtimeData"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/runtimeField"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="RUNTIME" />
+
+                            <TextView
+                                android:id="@+id/runtime"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="TextView" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/releaseDateData"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/releaseDateField"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="RELEASE DATE" />
+
+                            <TextView
+                                android:id="@+id/releasedate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="TextView" />
+                        </TableRow>
+
+                        <TableRow
+                            android:id="@+id/genreData"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/genreField"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="10dp"
+                                android:text="GENRE" />
+
+                        </TableRow>
+                    </TableLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/genreRecyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        tools:layout_editor_absoluteX="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tableLayout"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <TextView
+                    android:id="@+id/DirectorField"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/directorRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    tools:layout_editor_absoluteX="10dp" >
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+                <TextView
+                    android:id="@+id/castField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="CAST" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/castRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    tools:layout_editor_absoluteX="10dp" >
+
+                </androidx.recyclerview.widget.RecyclerView>
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recommandationRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
         </LinearLayout>
     </ScrollView>

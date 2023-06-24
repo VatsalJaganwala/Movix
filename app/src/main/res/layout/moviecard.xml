@@ -7,16 +7,29 @@
     android:layout_margin="5dp"
     android:layout_marginBottom="10dp">
 
+    <ImageView
+        android:id="@+id/tempMoviePoster"
+        android:layout_width="133dp"
+        android:layout_height="199dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/temp_poster" />
+
     <TextView
         android:id="@+id/movieName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="TextView"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/movieposter"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/movieposter"
-        app:layout_constraintTop_toTopOf="@+id/movieposter" />
+        app:layout_constraintTop_toTopOf="@+id/movieposter"
+        app:layout_constraintVertical_bias="0.768" />
 
     <ImageView
         android:id="@+id/movieposter"
@@ -26,6 +39,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/img" />
+        app:srcCompat="@drawable/temp_poster" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

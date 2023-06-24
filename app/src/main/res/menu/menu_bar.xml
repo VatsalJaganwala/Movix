@@ -6,11 +6,11 @@
         android:title="Home"
         />
     <item
-        android:id="@+id/recent"
-        android:icon="@drawable/ic_baseline_access_time_24"
-        android:title="Recent"/>
+        android:id="@+id/search"
+        android:icon="@drawable/ic_baseline_search_24"
+        android:title="Search"/>
     <item
-        android:id="@+id/popular"
+        android:id="@+id/trending"
         android:icon="@drawable/ic_baseline_local_fire_department_24"
         android:title="Trending"/>
 </menu>

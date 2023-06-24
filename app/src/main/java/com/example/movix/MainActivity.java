@@ -26,15 +26,12 @@ public class MainActivity extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.home:
-                        Toast.makeText(MainActivity.this, "Home is selected", Toast.LENGTH_SHORT).show();
                         selectedFragment = new homeScreen();
                         break;
-                    case R.id.recent:
-                        Toast.makeText(MainActivity.this, "Recent is Selected", Toast.LENGTH_SHORT).show();
+                    case R.id.search:
                         selectedFragment = new recentScreen();
                         break;
-                    case R.id.popular:
-                        Toast.makeText(MainActivity.this, "Popular is selected", Toast.LENGTH_SHORT).show();
+                    case R.id.trending:
                         selectedFragment = new popularScreen();
 
                         break;

@@ -94,10 +94,10 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
         viewHolder.getTextView().setText(name.get(position));
         String url ="https://image.tmdb.org/t/p/w185"+ posterUrl.get(position) ;
         Picasso.get().load(url).into(viewHolder.getMovieposterView());
-        viewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
+        viewHolder.getMovieposterView().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), name.get(position), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(v.getContext(), name.get(position), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(v.getContext(),MovieDetails.class);
                 intent.putExtra("id", idList.get(position));
                 intent.putExtra("ISMOVIE", isMovie.get(position));
