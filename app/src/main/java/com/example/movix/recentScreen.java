@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,7 +64,13 @@ public class recentScreen extends Fragment {
         searchRecycler = view.findViewById(R.id.searchRecyclerView);
         searchRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        int dpWidth = (int) (displayMetrics.widthPixels / displayMetrics.density);
+        int count = dpWidth/130;
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),count);
+
         searchRecycler.setLayoutManager(gridLayoutManager);
         makeRequest(url);
         searchText = view.findViewById(R.id.searchTextView);

@@ -3,6 +3,7 @@ package com.example.movix;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +66,12 @@ public class popularScreen extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
+        DisplayMetrics displayMetrics = this.getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        int dpWidth = (int) (displayMetrics.widthPixels / displayMetrics.density);
+        int count = dpWidth/130;
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),count);
         recyclerView.setLayoutManager(gridLayoutManager);
         String url = "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1&region=in";
 
