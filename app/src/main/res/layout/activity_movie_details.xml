@@ -8,6 +8,7 @@
     tools:context=".MovieDetails">
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -28,7 +29,6 @@
                     android:layout_margin="10dp"
 
                     android:layout_marginStart="44dp"
-                    android:text="TextView"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +91,6 @@
                     android:layout_margin="10dp"
                     android:ellipsize="end"
                     android:maxLines="4"
-                    android:text="TextView"
                     android:textSize="16sp"
                     tools:layout_editor_absoluteX="10dp"
                     tools:layout_editor_absoluteY="10dp" />
@@ -303,8 +302,7 @@
                                 android:id="@+id/rating"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:text="TextView" />
+                                android:layout_margin="10dp" />
                         </TableRow>
 
                         <TableRow
@@ -323,8 +321,7 @@
                                 android:id="@+id/runtime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:text="TextView" />
+                                android:layout_margin="10dp" />
                         </TableRow>
 
                         <TableRow
@@ -343,8 +340,7 @@
                                 android:id="@+id/releasedate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:text="TextView" />
+                                android:layout_margin="10dp" />
                         </TableRow>
 
                         <TableRow
@@ -368,9 +364,9 @@
                         android:layout_height="match_parent"
                         android:paddingLeft="10dp"
                         android:paddingRight="10dp"
-                        tools:layout_editor_absoluteX="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tableLayout"/>
+                        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
+                        tools:layout_editor_absoluteX="10dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -387,7 +383,7 @@
                     android:layout_height="match_parent"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    tools:layout_editor_absoluteX="10dp" >
+                    tools:layout_editor_absoluteX="10dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -405,7 +401,7 @@
                     android:layout_height="match_parent"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    tools:layout_editor_absoluteX="10dp" >
+                    tools:layout_editor_absoluteX="10dp">
 
                 </androidx.recyclerview.widget.RecyclerView>
 
@@ -418,5 +414,15 @@
 
         </LinearLayout>
     </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/loadingMovieDetails"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

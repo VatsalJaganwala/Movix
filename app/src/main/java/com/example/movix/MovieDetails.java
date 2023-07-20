@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class MovieDetails extends AppCompatActivity {
     ArrayList<String> Creater = new ArrayList<>();
     Boolean isMovie;
     JSONObject moviejson;
+    ProgressBar loading;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,7 @@ public class MovieDetails extends AppCompatActivity {
             StrictMode.setThreadPolicy(gfgPolicy);
         }
 
-
+        loading = findViewById(R.id.loadingMovieDetails);
         idValue = getIntent().getIntExtra("id", 0);
         isMovie = getIntent().getBooleanExtra("ISMOVIE",true);
         ArrayList<Integer> genreIdsValue;
@@ -87,6 +89,7 @@ public class MovieDetails extends AppCompatActivity {
                             setOtherDetails();
                             getCredits();
                             getSimilar();
+                            loading.setVisibility(View.GONE);
 
 
                         } catch (JSONException e) {

@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 public class recentScreen extends Fragment {
@@ -40,6 +42,8 @@ public class recentScreen extends Fragment {
     RecyclerView searchRecycler;
     TextView searchText;
     EditText searchBar;
+    TextView noResult;
+    ProgressBar loading;
 
 
 
@@ -55,12 +59,17 @@ public class recentScreen extends Fragment {
     }
 
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         String url = "https://api.themoviedb.org/3/movie/now_playing?region=in";
         View view= inflater.inflate(R.layout.fragment_recent_screen, container, false);
+        noResult = view.findViewById(R.id.noResult);
+        noResult.setVisibility(View.INVISIBLE);
+        loading = view.findViewById(R.id.loadingSearch);
         searchRecycler = view.findViewById(R.id.searchRecyclerView);
         searchRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
@@ -109,6 +118,8 @@ public class recentScreen extends Fragment {
         return view;
     }
     void makeRequest(String url){
+        loading.setVisibility(View.VISIBLE);
+        noResult.setVisibility(View.INVISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
@@ -116,6 +127,11 @@ public class recentScreen extends Fragment {
                         // Handle the response here
                         Log.d("Response", response);
                         temp = response;
+                        if(Objects.equals(temp, "{\"page\":1,\"results\":[],\"total_pages\":1,\"total_results\":0}"))
+                        {
+                            noResult.setVisibility(View.VISIBLE);
+                        }
+                        loading.setVisibility(View.INVISIBLE);
                         processResponce(temp);
 
 
@@ -125,6 +141,7 @@ public class recentScreen extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         // Handle the error here
+                        makeRequest(url);
                         Log.e("Error", error.toString());
                     }
                 }) {

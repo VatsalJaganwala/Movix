@@ -37,9 +37,6 @@ import java.util.Map;
 
 public class popularScreen extends Fragment {
     RecyclerView recyclerView;
-    ArrayList<String> movieNames = new ArrayList<>();
-    ArrayList<String> porterUrl = new ArrayList<>();
-    ArrayList<Integer> movieId = new ArrayList<>();
     String temp;
 
 
@@ -108,7 +105,6 @@ public class popularScreen extends Fragment {
         requestQueue.add(stringRequest);
 
 //        Toast.makeText(getContext(), temp, Toast.LENGTH_SHORT).show();
-
 
 
 

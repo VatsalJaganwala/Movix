@@ -78,9 +78,9 @@ public class homeAdapter extends RecyclerView.Adapter<homeAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int index) {
+        int position = index;
 
-        viewHolder.getCategory().setText(category.get(position));
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url.get(position),
                 new Response.Listener<String>() {
                     @Override
@@ -92,8 +92,11 @@ public class homeAdapter extends RecyclerView.Adapter<homeAdapter.ViewHolder> {
                         try {
                             CustomAdapter c = new CustomAdapter(jsonArray);
                             viewHolder.getHomeRecycler().setLayoutManager(new LinearLayoutManager(context));
-        viewHolder.getHomeRecycler().setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
+                            viewHolder.getHomeRecycler().setLayoutManager(new LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false));
 //                            GridLayoutManager gridLayoutManager = new GridLayoutManager(context,3);
+                            if(jsonArray.length()!=0){
+                            viewHolder.getCategory().setText(category.get(position));
+                            }
 
                             viewHolder.getHomeRecycler().setAdapter(c);
                         } catch (JSONException e) {
